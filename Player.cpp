@@ -1,5 +1,4 @@
 #include "Player.h"
-#include "Jitama.h"
 #include "DxLib.h"
 
 Player::Player(){
