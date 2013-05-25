@@ -43,6 +43,7 @@ void gameMain(void)
 	//発射する弾の初期化
 	//listを使って管理する
 	std::list<Jitama> jitamas;
+	int trigger = 0;
 
 	//BGに書き込む
 	SetDrawScreen(DX_SCREEN_BACK);
@@ -57,15 +58,19 @@ void gameMain(void)
 		player.draw();
 
 		int key = GetJoypadInputState(DX_INPUT_KEY_PAD1);
-		if(key & PAD_INPUT_A){
+		if(key & PAD_INPUT_A && trigger == 0){
 			Jitama jitama;
 			jitama.setGraph(LoadGraph("media/test_tama.bmp"));
 			jitama.x = player.x;
 			jitama.y = player.y;
 			jitamas.push_back(jitama);
+			//発射間隔(フレーム)を指定する
+			trigger = 12;
 		}
+		if(trigger > 0) trigger--;
 
 		for (auto i = jitamas.begin(); i != jitamas.end();){
+			//自機の弾の更新処理
 			//自機の弾の範囲チェック
 			//画面外に出たらlistから削除する
 			i->update();
