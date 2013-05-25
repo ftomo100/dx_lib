@@ -7,7 +7,7 @@ Enemy::Enemy(){
 	//ˆÚ“®‘¬“x‚Íƒ‰ƒ“ƒ_ƒ€‚Éİ’è
 	x = 640 + GetRand(30);
 	y = GetRand(480);
-	speed = GetRand(3) + 1;
+	speed = GetRand(10) + 1;
 }
 
 void Enemy::update(){

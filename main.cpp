@@ -5,6 +5,7 @@
 #include <list>
 
 void gameMain();
+bool isHit(int x1,int y1, int x2, int y2);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	LPSTR lpCmdLine, int nCmsShow)
@@ -88,7 +89,7 @@ void gameMain(void)
 			//画面外に出たらlistから削除する
 			i->update();
 			i->draw();
-			if ( i->x > 320){
+			if ( i->x > 640){
 				i = jitamas.erase(i);
 				continue;
 			}
@@ -112,10 +113,47 @@ void gameMain(void)
 			++i;
 		}
 
+		for (auto i = jitamas.begin(); i != jitamas.end();){
+			//当たり判定チェック
+			//弾と敵が当たっていれば敵を消去する
+			for (auto j = enemies.begin(); j != enemies.end();){
+				if ( isHit(i->x, i->y, j->x, j->y) ){
+					Enemy enemy;
+					enemy.setGraph(enemyGraph);
+					enemies.push_back(enemy);
+
+					j = enemies.erase(j);
+					continue;
+				}
+				++j;
+			}
+			++i;
+		}
+
+
+
 		//BGを表に出す(ダブルバッファリング)
 		ScreenFlip();
 	}
 
 	//キー入力待ち
 	WaitKey();
+}
+
+bool isHit(int x1, int y1, int x2, int y2)
+{
+	//当たり判定チェック
+	//弾の座標・・・x1,y1 64x16
+	//敵の座標・・・x2,y2 32x32
+	int dist;
+
+	//弾は右側で判定するため、弾の横幅を追加する。
+	x1 += 64;
+
+	dist = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+	if ( dist < 100){
+		return true;
+	} else {
+		return false;
+	}
 }
