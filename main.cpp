@@ -1,6 +1,7 @@
 #include "DxLib.h"
 #include "Player.h"
 #include "Jitama.h"
+#include "Enemy.h"
 #include <list>
 
 void gameMain();
@@ -36,10 +37,22 @@ void gameMain(void)
 	//ゲームのメイン
 	//こちらに色々な処理を記述する
 
+	GraphHandle playerGraph = LoadGraph("media/test_jiki.bmp");
+	GraphHandle jitamaGraph = LoadGraph("media/test_tama.bmp");
+	GraphHandle enemyGraph = LoadGraph("media/test_teki.bmp");
+
 	//playerの初期化
 	Player player;
-	player.setGraph( LoadGraph("media/test_jiki.bmp") );
+	player.setGraph(playerGraph);
 	
+	//enemyの初期化
+	std::list<Enemy> enemies;
+	for ( int i = 0; i< 10 ; i++){
+		Enemy enemy;
+		enemy.setGraph(enemyGraph);
+		enemies.push_back(enemy);
+	}
+
 	//発射する弾の初期化
 	//listを使って管理する
 	std::list<Jitama> jitamas;
@@ -60,7 +73,7 @@ void gameMain(void)
 		int key = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 		if(key & PAD_INPUT_A && trigger == 0){
 			Jitama jitama;
-			jitama.setGraph(LoadGraph("media/test_tama.bmp"));
+			jitama.setGraph(jitamaGraph);
 			jitama.x = player.x;
 			jitama.y = player.y;
 			jitamas.push_back(jitama);
@@ -77,6 +90,23 @@ void gameMain(void)
 			i->draw();
 			if ( i->x > 320){
 				i = jitamas.erase(i);
+				continue;
+			}
+			++i;
+		}
+
+		for (auto i = enemies.begin(); i != enemies.end();){
+			//敵の更新処理
+			//自機の弾の範囲チェック
+			//画面外に出たらlistから削除する
+			i->update();
+			i->draw();
+			if ( i->x < 0){
+				Enemy enemy;
+				enemy.setGraph(enemyGraph);
+				enemies.push_back(enemy);
+
+				i = enemies.erase(i);
 				continue;
 			}
 			++i;
