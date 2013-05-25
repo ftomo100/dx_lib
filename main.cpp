@@ -7,6 +7,9 @@
 void gameMain();
 bool isHit(int x1,int y1, int x2, int y2);
 
+//スコア
+int gameScore;
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	LPSTR lpCmdLine, int nCmsShow)
 {
@@ -38,6 +41,8 @@ void gameMain(void)
 	//ゲームのメイン
 	//こちらに色々な処理を記述する
 
+	gameScore = 0;
+
 	GraphHandle playerGraph = LoadGraph("media/test_jiki.bmp");
 	GraphHandle jitamaGraph = LoadGraph("media/test_tama.bmp");
 	GraphHandle enemyGraph = LoadGraph("media/test_teki.bmp");
@@ -67,6 +72,8 @@ void gameMain(void)
 		ClsDrawScreen();
 		//四角形を描画する
 		DrawBox(270, 190, 370, 290, GetColor(255, 255, 0), TRUE);
+
+		DrawFormatString(0, 0, GetColor(255,255,255), "SCORE:%6d", gameScore);
 
 		player.update();
 		player.draw();
@@ -121,6 +128,8 @@ void gameMain(void)
 					Enemy enemy;
 					enemy.setGraph(enemyGraph);
 					enemies.push_back(enemy);
+					//100点　加算する
+					gameScore += 100;
 
 					j = enemies.erase(j);
 					continue;
@@ -151,7 +160,7 @@ bool isHit(int x1, int y1, int x2, int y2)
 	x1 += 64;
 
 	dist = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
-	if ( dist < 100){
+	if ( dist < 200){
 		return true;
 	} else {
 		return false;
