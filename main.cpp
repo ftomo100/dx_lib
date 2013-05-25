@@ -1,5 +1,7 @@
 #include "DxLib.h"
 #include "Player.h"
+#include "Jitama.h"
+#include <list>
 
 void gameMain();
 
@@ -37,6 +39,10 @@ void gameMain(void)
 	//playerの初期化
 	Player player;
 	player.setGraph( LoadGraph("media/test_jiki.bmp") );
+	
+	//発射する弾の初期化
+	//listを使って管理する
+	std::list<Jitama> jitamas;
 
 	//BGに書き込む
 	SetDrawScreen(DX_SCREEN_BACK);
@@ -49,6 +55,27 @@ void gameMain(void)
 
 		player.update();
 		player.draw();
+
+		int key = GetJoypadInputState(DX_INPUT_KEY_PAD1);
+		if(key & PAD_INPUT_A){
+			Jitama jitama;
+			jitama.setGraph(LoadGraph("media/test_tama.bmp"));
+			jitama.x = player.x;
+			jitama.y = player.y;
+			jitamas.push_back(jitama);
+		}
+
+		for (auto i = jitamas.begin(); i != jitamas.end();){
+			//自機の弾の範囲チェック
+			//画面外に出たらlistから削除する
+			i->update();
+			i->draw();
+			if ( i->x > 320){
+				i = jitamas.erase(i);
+				continue;
+			}
+			++i;
+		}
 
 		//BGを表に出す(ダブルバッファリング)
 		ScreenFlip();

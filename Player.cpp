@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Jitama.h"
 #include "DxLib.h"
 
 Player::Player(){
@@ -14,6 +15,8 @@ void Player::update(){
 	if(key & PAD_INPUT_DOWN)	y += 4;
 	if(key & PAD_INPUT_LEFT)	x -= 4;
 	if(key & PAD_INPUT_RIGHT)	x += 4;
+
+
 
 	//移動範囲チェック
 	if( x < 0) x= 0;
