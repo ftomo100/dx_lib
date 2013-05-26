@@ -4,6 +4,8 @@
 #include "Enemy.h"
 #include <list>
 
+//‚±‚ê‚Í•ªUŠÂ‹«‚Å‘‚«‚İ‚Ü‚µ‚½
+
 void gameMain();
 bool isHit(int x1,int y1, int x2, int y2);
 
